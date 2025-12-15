@@ -43,10 +43,26 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', '¡Producto creado con éxito!');
     }
-    public function index()
+    public function index(Request $request)
     {
-        $products= Product::all();
-        return view('products.index', compact('products'));
+        $query = Product::query();
+
+        // 1. Filtro por Texto (Nombre)
+        if ($request->filled('buscar')) {
+            $query->where('name', 'like', '%' . $request->buscar . '%');
+        }
+
+        // 2. Filtro por Categoría (NUEVO)
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->get();
+        
+        // 3. Traemos todas las categorías para llenar el <select>
+        $categories = Category::all(); 
+
+        return view('products.index', compact('products', 'categories'));
     }
     public function edit(Product $product)
     {

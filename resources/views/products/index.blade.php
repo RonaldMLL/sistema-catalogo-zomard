@@ -25,8 +25,36 @@
     </nav>
 
     <div class="max-w-6xl mx-auto px-4">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Nuestros Productos</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Nuestros Productos</h1>
+            
+            <form action="{{ route('products.index') }}" method="GET" class="flex gap-2 flex-wrap sm:flex-nowrap">
+                
+                <select name="category_id" class="border border-gray-300 rounded px-3 py-2 bg-white focus:outline-none focus:border-green-500">
+                    <option value="">Todas las Categorías</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" 
+                            {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
 
+                <input type="text" name="buscar" placeholder="Nombre del producto..." 
+                       value="{{ request('buscar') }}"
+                       class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500">
+                
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    🔍
+                </button>
+                
+                @if(request('buscar') || request('category_id'))
+                    <a href="{{ route('products.index') }}" class="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 text-sm flex items-center">
+                        X
+                    </a>
+                @endif
+            </form>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             @foreach($products as $product)
