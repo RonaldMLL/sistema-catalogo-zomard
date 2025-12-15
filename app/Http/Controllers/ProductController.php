@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product; // Importante: Importar el modelo
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Barryvdh\DomPDF\Facade\Pdf; // <--- AGREGA ESTO
 class ProductController extends Controller
 {
     // 1. Mostrar el formulario
@@ -87,5 +88,17 @@ class ProductController extends Controller
     {
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente');
+    }
+    // Generar PDF
+    public function downloadPdf()
+    {
+        $products = Product::all(); // Obtenemos los datos
+
+        // 1. Cargamos una vista especial (que crearemos ahora)
+        // y le pasamos los productos.
+        $pdf = Pdf::loadView('products.pdf', compact('products'));
+
+        // 2. Descargamos el archivo con un nombre automático
+        return $pdf->download('catalogo-zomard.pdf');
     }
 }

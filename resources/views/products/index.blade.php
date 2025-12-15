@@ -10,10 +10,17 @@
 
     <nav class="bg-white shadow mb-8">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-green-600">IMPORTACION LLUSMAR</div>
-            <a href="{{ route('products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                + Subir Nuevo Producto
-            </a>
+            <div class="text-xl font-bold text-green-600">Zomard</div>
+            
+            <div class="flex gap-2">
+                <a href="{{ route('products.pdf') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-bold flex items-center gap-2">
+                    📄 PDF
+                </a>
+
+                <a href="{{ route('products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    + Nuevo
+                </a>
+            </div>
         </div>
     </nav>
 

@@ -23,3 +23,7 @@ Route::get('/productos/{product}/editar', [ProductController::class, 'edit'])->n
 Route::put('/productos/{product}', [ProductController::class, 'update'])->name('products.update');
 
 Route::delete('/productos/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+// ...
+
+Route::get('/descargar-catalogo', [ProductController::class, 'downloadPdf'])->name('products.pdf');
