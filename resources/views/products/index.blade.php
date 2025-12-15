@@ -10,8 +10,12 @@
 
     <nav class="bg-white shadow mb-8">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold text-green-600">Zomard</div>
-            
+            <div class="flex gap-4 items-center">
+                <div class="text-xl font-bold text-green-600">Zomard</div>
+                <a href="{{ route('products.index') }}" class="text-gray-500 hover:text-green-600 font-bold">📦 Productos</a>
+                <a href="{{ route('clients.index') }}" class="text-gray-500 hover:text-green-600 font-bold">👥 Clientes</a>
+                <a href="{{ route('sales.index') }}" class="text-gray-500 hover:text-green-600 font-bold">💰 Ventas</a>
+            </div>
             <div class="flex gap-2">
                 <a href="{{ route('products.pdf') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-bold flex items-center gap-2">
                     📄 PDF
