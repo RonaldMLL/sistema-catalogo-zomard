@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ClientController; // <--- CLIENTES
+use App\Http\Controllers\SaleController; // <--- VENTAS
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,6 +25,18 @@ Route::put('/productos/{product}', [ProductController::class, 'update'])->name('
 
 Route::delete('/productos/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-// ...
+// ... PDF Download Route
 
 Route::get('/descargar-catalogo', [ProductController::class, 'downloadPdf'])->name('products.pdf');
+
+
+// RUTAS DE CLIENTES
+Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
+Route::get('/clientes/crear', [ClientController::class, 'create'])->name('clients.create');
+Route::post('/clientes', [ClientController::class, 'store'])->name('clients.store');
+
+// RUTAS DE VENTAS
+Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index'); // <--- NUEVA
+Route::get('/nueva-venta', [SaleController::class, 'create'])->name('sales.create');
+Route::get('/ventas/{id}', [SaleController::class, 'show'])->name('sales.show');
+Route::post('/guardar-venta', [SaleController::class, 'store'])->name('sales.store');
