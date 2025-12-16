@@ -41,4 +41,4 @@ Route::get('/ventas/{id}', [SaleController::class, 'show'])->name('sales.show');
 Route::post('/guardar-venta', [SaleController::class, 'store'])->name('sales.store');
 
 // Nueva ruta para pagar
-Route::post('/ventas/{id}/pagar', [SaleController::class, 'markAsPaid'])->name('sales.pay'); // <--- NUEVA
+Route::post('/ventas/{id}/abono', [SaleController::class, 'addPayment'])->name('sales.add_payment');

@@ -91,13 +91,36 @@ class SaleController extends Controller
         
         return view('sales.show', compact('sale'));
     }
-    public function markAsPaid($id)
+    // 4. Registrar un ABONO (Pago parcial)
+    public function addPayment(Request $request, $id)
     {
+        $request->validate([
+            'amount' => 'required|numeric|min:0.1',
+            'payment_date' => 'required|date'
+        ]);
+
         $sale = Sale::findOrFail($id);
-        
-        // Solo actualizamos el estado
-        $sale->update(['status' => 'pagado']);
-        
-        return redirect()->back()->with('success', '¡Pago registrado correctamente! La deuda ha sido saldada.');
+
+        // Validar que no pague más de lo que debe
+        if ($request->amount > $sale->due_amount) {
+            return back()->withErrors(['amount' => 'El monto excede la deuda actual (Bs ' . $sale->due_amount . ')']);
+        }
+
+        // 1. Crear el pago
+        $sale->payments()->create([
+            'amount' => $request->amount,
+            'payment_date' => $request->payment_date
+        ]);
+
+        // 2. Verificar si ya pagó todo para cambiar el estado
+        // Recalculamos el saldo restando el nuevo pago
+        if ($sale->refresh()->due_amount <= 0) {
+            $sale->update(['status' => 'pagado']);
+        } else {
+            // Si aun debe, nos aseguramos que diga 'pendiente'
+            $sale->update(['status' => 'pendiente']);
+        }
+
+        return back()->with('success', '¡Abono registrado correctamente!');
     }
 }

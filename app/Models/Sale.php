@@ -23,4 +23,22 @@ class Sale extends Model
     {
         return $this->hasMany(SaleDetail::class);
     }
+    // --- NUEVO: Relación con Pagos ---
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    // --- TRUCO PRO: Calcular cuánto ha pagado ---
+    // Esto permite usar $sale->paid_amount en cualquier lado
+    public function getPaidAmountAttribute()
+    {
+        return $this->payments->sum('amount');
+    }
+
+    // --- TRUCO PRO: Calcular el saldo (Deuda) ---
+    // Esto permite usar $sale->due_amount
+    public function getDueAmountAttribute()
+    {
+        return $this->total - $this->paid_amount;
+    }
 }

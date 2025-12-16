@@ -57,34 +57,81 @@
                 </tr>
                 @endforeach
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-right py-4 font-bold text-xl text-gray-600">TOTAL:</td>
-                    <td class="text-right py-4 font-bold text-xl text-green-700">
-                        Bs {{ number_format($sale->total, 2) }}
-                    </td>
-                </tr>
-            </tfoot>
+            <div class="flex flex-col md:flex-row gap-8 mt-4 border-t pt-4">
+            
+            <div class="w-full md:w-1/2">
+                <div class="flex justify-between mb-2 text-lg">
+                    <span class="font-bold text-gray-600">Total Venta:</span>
+                    <span class="font-bold text-gray-800">Bs {{ number_format($sale->total, 2) }}</span>
+                </div>
+                <div class="flex justify-between mb-2 text-lg text-green-700">
+                    <span class="font-bold">A cuenta (Pagado):</span>
+                    <span class="font-bold">- Bs {{ number_format($sale->paid_amount, 2) }}</span>
+                </div>
+                <div class="flex justify-between border-t-2 border-gray-800 pt-2 text-2xl text-red-600">
+                    <span class="font-bold">SALDO A PAGAR:</span>
+                    <span class="font-bold">Bs {{ number_format($sale->due_amount, 2) }}</span>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 bg-gray-50 p-4 rounded border border-gray-200 no-print">
+                @if($sale->due_amount > 0)
+                    <h3 class="font-bold text-gray-700 mb-3">💰 Registrar Nuevo Abono</h3>
+                    
+                    @if($errors->any())
+                        <div class="bg-red-100 text-red-700 p-2 text-sm rounded mb-2">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('sales.add_payment', $sale->id) }}" method="POST" class="flex gap-2 items-end">
+                        @csrf
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">Fecha</label>
+                            <input type="date" name="payment_date" value="{{ date('Y-m-d') }}" class="w-full border p-2 rounded text-sm">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-xs font-bold text-gray-500">Monto (Bs)</label>
+                            <input type="number" name="amount" step="0.01" max="{{ $sale->due_amount }}" class="w-full border p-2 rounded" placeholder="Ej: 500">
+                        </div>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            Abonar
+                        </button>
+                    </form>
+                @else
+                    <div class="h-full flex items-center justify-center bg-green-100 rounded text-green-800 font-bold text-xl border border-green-300">
+                        ✅ ¡DEUDA CANCELADA!
+                    </div>
+                @endif
+            </div>
+        </div>
         </table>
 
-        <div class="flex justify-end gap-4 no-print items-center mt-8">
-            
-            <a href="{{ route('sales.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 font-bold">
-                Volver
-            </a>
+        @if($sale->payments->count() > 0)
+        <div class="mt-8">
+            <h4 class="font-bold text-gray-600 mb-2">Historial de Abonos</h4>
+            <table class="w-full text-sm text-left text-gray-600 border">
+                <thead class="bg-gray-100 uppercase">
+                    <tr>
+                        <th class="px-4 py-2 border">Fecha</th>
+                        <th class="px-4 py-2 border">Monto Abonado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($sale->payments as $payment)
+                    <tr>
+                        <td class="px-4 py-2 border">{{ $payment->payment_date }}</td>
+                        <td class="px-4 py-2 border font-bold text-green-600">Bs {{ number_format($payment->amount, 2) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
 
-            @if($sale->status == 'pendiente')
-                <form action="{{ route('sales.pay', $sale->id) }}" method="POST" onsubmit="return confirm('¿Confirmas que el cliente pagó el total de la deuda?');">
-                    @csrf
-                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-bold flex items-center gap-2">
-                        💸 Registrar Pago
-                    </button>
-                </form>
-            @endif
-
-            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold flex items-center gap-2">
-                🖨️ Imprimir
-            </button>
+        <div class="flex justify-end gap-4 mt-8 no-print">
+            <a href="{{ route('sales.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded font-bold">Volver</a>
+            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded font-bold">🖨️ Imprimir Estado</button>
         </div>
 
     </div>
