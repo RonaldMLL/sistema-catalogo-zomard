@@ -16,6 +16,12 @@
                 <a href="{{ route('clients.index') }}" class="hover:text-green-600">👥 Clientes</a>
                 <a href="{{ route('sales.index') }}" class="hover:text-green-600">💰 Ventas</a>
             </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="text-red-500 hover:text-red-700 font-bold border border-red-200 px-3 py-1 rounded ml-4">
+                    Cerrar Sesión 🚪
+                </button>
+            </form>
         </div>
     </nav>
 

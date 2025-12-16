@@ -1,44 +1,56 @@
 <?php
 
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClientController; // <--- CLIENTES
-use App\Http\Controllers\SaleController; // <--- VENTAS
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\HomeController;
-// Ruta Principal (Dashboard)
-Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-// Ruta para ver el formulario
-Route::get('/crear-producto', [ProductController::class, 'create'])->name('products.create');
 
-// Ruta para recibir los datos (POST)
-Route::post('/productos', [ProductController::class, 'store'])->name('products.store');
+/*
+|--------------------------------------------------------------------------
+| RUTAS PÚBLICAS (Cualquiera las ve)
+|--------------------------------------------------------------------------
+*/
 
-// Ruta para ver el catálogo público
-Route::get('/catalogo', [ProductController::class, 'index'])->name('products.index');
+// Redirigir la raíz al Login si no ha entrado, o al Dashboard si ya entró
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-// Ruta para ver el formulario de edición
-Route::get('/productos/{product}/editar', [ProductController::class, 'edit'])->name('products.edit');
+/*
+|--------------------------------------------------------------------------
+| RUTAS PROTEGIDAS (Solo usuarios logueados - EL CANDADO 🔒)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
 
-// Ruta para guardar los cambios (PUT)
-Route::put('/productos/{product}', [ProductController::class, 'update'])->name('products.update');
+    // 1. DASHBOARD (Página Principal)
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-Route::delete('/productos/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // 2. PRODUCTOS
+    Route::resource('products', ProductController::class);
 
-// ... PDF Download Route
+    // 3. CLIENTES
+    // Rutas manuales que creamos
+    Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('/clientes/crear', [ClientController::class, 'create'])->name('clients.create');
+    Route::post('/clientes', [ClientController::class, 'store'])->name('clients.store');
 
-Route::get('/descargar-catalogo', [ProductController::class, 'downloadPdf'])->name('products.pdf');
+    // 4. VENTAS
+    Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/ventas/{id}', [SaleController::class, 'show'])->name('sales.show');
+    Route::get('/nueva-venta', [SaleController::class, 'create'])->name('sales.create');
+    Route::post('/guardar-venta', [SaleController::class, 'store'])->name('sales.store');
+    
+    // Pagos / Abonos
+    Route::post('/ventas/{id}/abono', [SaleController::class, 'addPayment'])->name('sales.add_payment'); // <--- TU NUEVA RUTA DE ABONOS
 
+    // PERFIL DE USUARIO (Viene con Breeze)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-// RUTAS DE CLIENTES
-Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
-Route::get('/clientes/crear', [ClientController::class, 'create'])->name('clients.create');
-Route::post('/clientes', [ClientController::class, 'store'])->name('clients.store');
-
-// RUTAS DE VENTAS
-Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index'); // <--- NUEVA
-Route::get('/nueva-venta', [SaleController::class, 'create'])->name('sales.create');
-Route::get('/ventas/{id}', [SaleController::class, 'show'])->name('sales.show');
-Route::post('/guardar-venta', [SaleController::class, 'store'])->name('sales.store');
-
-// Nueva ruta para pagar
-Route::post('/ventas/{id}/abono', [SaleController::class, 'addPayment'])->name('sales.add_payment');
+// Rutas de autenticación (Login, Registro, etc.) generadas por Breeze
+require __DIR__.'/auth.php';
