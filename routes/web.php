@@ -4,10 +4,9 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController; // <--- CLIENTES
 use App\Http\Controllers\SaleController; // <--- VENTAS
-Route::get('/', function () {
-    return view('welcome');
-});
-
+use App\Http\Controllers\HomeController;
+// Ruta Principal (Dashboard)
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 // Ruta para ver el formulario
 Route::get('/crear-producto', [ProductController::class, 'create'])->name('products.create');
 
@@ -40,3 +39,6 @@ Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index'); //
 Route::get('/nueva-venta', [SaleController::class, 'create'])->name('sales.create');
 Route::get('/ventas/{id}', [SaleController::class, 'show'])->name('sales.show');
 Route::post('/guardar-venta', [SaleController::class, 'store'])->name('sales.store');
+
+// Nueva ruta para pagar
+Route::post('/ventas/{id}/pagar', [SaleController::class, 'markAsPaid'])->name('sales.pay'); // <--- NUEVA

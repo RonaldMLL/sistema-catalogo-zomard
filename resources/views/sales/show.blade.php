@@ -67,11 +67,22 @@
             </tfoot>
         </table>
 
-        <div class="flex justify-end gap-4 no-print">
-            <a href="{{ route('sales.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+        <div class="flex justify-end gap-4 no-print items-center mt-8">
+            
+            <a href="{{ route('sales.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 font-bold">
                 Volver
             </a>
-            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold">
+
+            @if($sale->status == 'pendiente')
+                <form action="{{ route('sales.pay', $sale->id) }}" method="POST" onsubmit="return confirm('¿Confirmas que el cliente pagó el total de la deuda?');">
+                    @csrf
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-bold flex items-center gap-2">
+                        💸 Registrar Pago
+                    </button>
+                </form>
+            @endif
+
+            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold flex items-center gap-2">
                 🖨️ Imprimir
             </button>
         </div>

@@ -91,4 +91,13 @@ class SaleController extends Controller
         
         return view('sales.show', compact('sale'));
     }
+    public function markAsPaid($id)
+    {
+        $sale = Sale::findOrFail($id);
+        
+        // Solo actualizamos el estado
+        $sale->update(['status' => 'pagado']);
+        
+        return redirect()->back()->with('success', '¡Pago registrado correctamente! La deuda ha sido saldada.');
+    }
 }
