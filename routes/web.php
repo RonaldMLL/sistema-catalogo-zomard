@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     // 2. PRODUCTOS
+    Route::get('/productos/pdf', [ProductController::class, 'downloadPdf'])->name('products.pdf'); // <--- ¡AGREGA ESTA LÍNEA!
     Route::resource('products', ProductController::class);
 
     // 3. CLIENTES
