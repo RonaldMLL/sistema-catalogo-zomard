@@ -6,7 +6,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\PurchaseController;
 /*
 |--------------------------------------------------------------------------
 | RUTAS PÚBLICAS (Cualquiera las ve)
@@ -51,6 +52,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // 5. PROVEEDORES (Fábricas)
+    Route::resource('providers', ProviderController::class);
+    // 6. COMPRAS (Entradas de Almacén)
+    Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store']);
 });
 
 // Rutas de autenticación (Login, Registro, etc.) generadas por Breeze

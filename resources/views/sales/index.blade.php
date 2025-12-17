@@ -12,6 +12,7 @@
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex gap-4 items-center">
                 <div class="text-xl font-bold text-green-600">Zomard</div>
+                <a href="{{ route('dashboard') }}" class="text-gray-500 hover:text-green-600 font-bold">🏠 Dashboard</a>
                 <a href="{{ route('products.index') }}" class="text-gray-500 hover:text-green-600 font-bold">📦 Productos</a>
                 <a href="{{ route('clients.index') }}" class="text-gray-500 hover:text-green-600 font-bold">👥 Clientes</a>
                 <a href="{{ route('sales.index') }}" class="text-green-600 border-b-2 border-green-600 font-bold">💰 Ventas</a>
