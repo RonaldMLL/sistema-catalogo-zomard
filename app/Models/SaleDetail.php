@@ -14,6 +14,7 @@ class SaleDetail extends Model
     // --- ESTA ES LA PARTE QUE TE FALTA O TIENE ERROR ---
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        //return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

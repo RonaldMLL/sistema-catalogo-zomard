@@ -74,6 +74,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-4">
+            {{ $clients->links() }}
+        </div>
     </div>
 
 </body>

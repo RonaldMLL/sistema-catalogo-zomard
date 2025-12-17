@@ -80,7 +80,7 @@ class SaleController extends Controller
     public function index()
     {
         // Traemos las ventas con la info del cliente, ordenadas de la más nueva a la más vieja
-        $sales = Sale::with('client')->latest()->get();
+        $sales = Sale::with('client')->latest()->paginate(10);
         
         return view('sales.index', compact('sales'));
     }

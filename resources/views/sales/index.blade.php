@@ -83,6 +83,9 @@
                 </div>
             @endif
         </div>
+        <div class="mt-4">
+            {{ $sales->links() }}
+        </div>
     </div>
 
 </body>

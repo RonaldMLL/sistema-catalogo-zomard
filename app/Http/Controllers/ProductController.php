@@ -57,8 +57,7 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $products = $query->get();
-        
+        $products = $query->paginate(9)->withQueryString();        
         // 3. Traemos todas las categorías para llenar el <select>
         $categories = Category::all(); 
 
